@@ -1,7 +1,8 @@
 # Tendance Prénoms
 
-Cette application Streamlit analyse et visualise les données sur les prénoms des bébés en France. 
-Les données incluent le nombre de naissances pour chaque prénom par année et par sexe.
+Bienvenue dans l'application `Tendance Prénoms`, un outil interactif pour explorer les prénoms donnés aux nouveau-nés en France au fil des ans. Cette application vous permet de rechercher des prénoms, de découvrir les tendances de popularité et de visualiser les prénoms les plus courants par année.
+
+L'application utilise `Streamlit` pour une interface conviviale, `pandas` et `numpy` pour la manipulation des données, et `Vega Lite` pour des visualisations interactives. Que vous souhaitiez connaître la popularité de votre prénom, trouver des idées pour nommer un enfant, ou explorer les tendances démographiques, cette application vous offre des informations précieuses et des visualisations attrayantes.
 
 ## Fonctionnalités
 

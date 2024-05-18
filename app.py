@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from random import choice
-import altair as alt
+# import altair as alt
 
 from utils import AREA_CHART, BAR_CHART
 
