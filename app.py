@@ -45,6 +45,7 @@ data = load_data()
 
 # HOME
 if st.session_state.prenom.strip().upper() not in get_uniques("preusuel") : 
+    # Reshearch bar
     st.text_input(
         'Prénom', '', 
         placeholder=choice(top(200)).title(), 
@@ -53,6 +54,7 @@ if st.session_state.prenom.strip().upper() not in get_uniques("preusuel") :
         key='home_prenom'
     )
 
+    # Girls Top
     '---'
     st.markdown(1*'<br/>', unsafe_allow_html=True)
     '### 👧🏻 Top prénom féminin 2022'
@@ -68,6 +70,7 @@ if st.session_state.prenom.strip().upper() not in get_uniques("preusuel") :
             # type='secondary' if i%2 else 'primary'
         )
 
+    # Boys Top
     st.markdown(1*'<br/>', unsafe_allow_html=True)
     '### 👦🏻 Top prénom masculin 2022'
     _top = data[(data["sexe"] == 1) & (data["annais"] == 2022)].groupby('preusuel')['nombre'].sum().reset_index().sort_values(by='nombre', ascending=False).reset_index()
@@ -81,57 +84,34 @@ if st.session_state.prenom.strip().upper() not in get_uniques("preusuel") :
             # type='secondary' if i%2 else 'primary'
         )
 
+    # Global Top
     '---'
     st.markdown(1*'<br/>', unsafe_allow_html=True)
     "### 🥇 Top selon l'année"
     an = st.slider("Année", int(get_uniques("annais").min()), int(get_uniques("annais").max()), int(get_uniques("annais").max()))
     
-    N = 5
+    N = 5 # top 5
     data = data[data['annais'] == an]
     top10_h = data[data["sexe"] == 1].groupby(['preusuel', 'sexe'])['nombre'].sum().reset_index().sort_values(by='nombre', ascending=False).reset_index(drop=True).head(N)
     top10_f = data[data["sexe"] == 2].groupby(['preusuel', 'sexe'])['nombre'].sum().reset_index().sort_values(by='nombre', ascending=False).reset_index(drop=True).head(N)
-
     top10_h['position'] = top10_h.index + 1
     top10_f['position'] = top10_f.index + 1
 
     _top = pd.concat([top10_h, top10_f], ignore_index=True)
-    # _top = data[data["annais"] == an].groupby(['preusuel', 'sexe'])['nombre'].sum().reset_index().sort_values(by='nombre', ascending=False).reset_index()[:10]
-    # _top.to_json('res.json', orient='records')
-
+    # Bar chart
     st.vega_lite_chart(_top, BAR_CHART, title={'text':str(an), "align": "right", "anchor": "middle"}, width=704)
-    # _top['sexe_label'] = _top['sexe'].apply(lambda x: 'Garçons' if x == 1 else 'Filles')
 
-    # chart = alt.Chart(_top).mark_bar(cornerRadiusEnd=8).encode(
-    #     x=alt.X('position:N', 
-    #             title='Top', 
-    #             axis=alt.Axis(grid=True, tickMinStep=1, labelAngle=0),
-    #             sort='-y'),
-    #     y=alt.Y('nombre:Q', 
-    #             title='', 
-    #             axis=alt.Axis(format='~s')),
-    #     color=alt.Color('sexe_label:N', 
-    #                     legend=alt.Legend(title='', direction='horizontal', orient='top')),
-    #     tooltip=[
-    #         alt.Tooltip('preusuel:N', title='Prénom'),
-    #         alt.Tooltip('nombre:Q', title='Naissances', format='~s')
-    #     ],
-    #     xOffset='sexe_label'
-    # ).properties(
-    #     width=704,
-    #     padding={'bottom': 20}
-    # )
-
-    # st.altair_chart(chart)
-
-#----------------------------------
-
+############### 
 # SEARCH
 if st.session_state.prenom.strip().upper() in get_uniques("preusuel") :
+    # Sidebar
     with st.sidebar:
+        # Home
         if st.button('Accueil', use_container_width=True) :
             st.session_state.prenom = ''
             st.rerun()
 
+        # Inputs
         prenom = st.text_input("Prénom", st.session_state.prenom.title()).upper().strip()
         annee = st.slider(
             "Année",
@@ -142,23 +122,21 @@ if st.session_state.prenom.strip().upper() in get_uniques("preusuel") :
 
     if prenom:
         if prenom not in get_uniques("preusuel"):
-            st.warning("Prénom inexistant")
+            st.warning("Prénom inconnu")
 
+        # Affichage
         if prenom in get_uniques("preusuel"):
             st.session_state.prenom = prenom
             f'# {prenom.title()}'
             f"## Nombre de naissances"
 
-            # selectionneer le prenom
+            # selectionner le prenom
             _data = data[
                 (data["preusuel"] == prenom)
                 & (annee[0] < data["annais"])
                 & (annee[1] > data["annais"])
             ]
 
-            st.vega_lite_chart(
-                _data.groupby("annais")["nombre"].sum().reset_index(),
-                AREA_CHART,
-                theme=None, 
-            )
+            # area chart
+            st.vega_lite_chart(_data.groupby("annais")["nombre"].sum().reset_index(),AREA_CHART,theme=None)
 
