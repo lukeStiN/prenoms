@@ -41,6 +41,7 @@ def set_prenom(value : str = ''):
     st.session_state.prenom = value.strip().upper()
 
 st.set_page_config("Prénoms", "👥", "centered")
+st.logo('https://www.luc-estienne.com/web/image/website/1/logo', link='https://www.luc-estienne.com/')
 data = load_data()
 
 # HOME
@@ -139,4 +140,3 @@ if st.session_state.prenom.strip().upper() in get_uniques("preusuel") :
 
             # area chart
             st.vega_lite_chart(_data.groupby("annais")["nombre"].sum().reset_index(),AREA_CHART,theme=None)
-
